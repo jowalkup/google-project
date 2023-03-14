@@ -3,7 +3,8 @@ from bs4 import BeautifulSoup
 import requests
 URL = "https://konstantinnovation.github.io/apcsSpring.html"
 req = requests.get(URL)
-print(req.content)
+#print(req.content)
 soup = BeautifulSoup(req.text, "html.parser")
-for link in soup.find_all('a'):
-    print(link.get('href'))
+#for link in soup.find_all('a'):
+    #print(link.get('href')) # gets the links
+print(soup.get_text()) # gets the text
