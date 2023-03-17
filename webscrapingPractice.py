@@ -12,4 +12,10 @@ soup = BeautifulSoup(req.text, "html.parser")
 URL2 = "https://www.nyc.gov/site/civicengagement/voting/poll-site-service-list.page"
 req2 = requests.get(URL2)
 soup2 = BeautifulSoup(req2.text, "html.parser")
-print(soup2.get_text())
+#print(soup2.get_text())
+
+#f = open("soup4.txt", "x")
+#f.write("Hello There\n")
+
+f = open("soup2.txt", "w")
+f.write(soup2.get_text())
