@@ -1,0 +1,1462 @@
+
+
+
+
+
+AP Computer Science Term 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+AP Computer Science Term 2
+
+
+
+
+Lecture Notes
+
+03-16 Mergesort 
+03-15 Merge two sorted lists
+03-14 Runtime Analysis
+03-10 Writing QuickSort
+03-09 Writing QuickSelect
+03-08 Writing Partition
+03-07 Partition
+03-06 Quick Select
+03-02 Maze Solver Update
+02-28 Maze Solver
+02-27 File reading updates
+02-16 Animation options
+02-15 NQueens solve
+02-14 Lab02-NQueens
+02-13 N-Queens
+02-09 Recursive Backtracking practice
+02-08 Recursive Backtracking
+02-07 Back To Recursion
+02-02 Lab01-USACO
+02-01 USACO Problems
+01-31 Logistics
+
+
+
+
+ HIDDEN CONTENT 
+
+
+
+Mergesort
+Please carefully read both today's codebase AND the notes from yesterday.
+Stable sorts
+A stable sorts will maintain the relative order of equal values. This cannot be seen on primitive types,  but can be seen on any objects. 
+Example:  [41 ,9,2,42 ] can be sorted in 2 ways:
+A) [2,41 ,42,9 ]
+B) [2,42 ,41,9 ]
+A stable sort would always sort the array into configuration A. The mergesort, insertionsort, selectionsort, and bubblesort are all stable. Quicksort however is not a stable sort!
+Lab05
+Lab 5 repo here: https://classroom.github.com/a/SdakdmB1 
+Remember mergesortH is a RECURSIVE sort function like quicksort. You should sort the two halves using mergesortH.
+public class Merge{
+  /**merge takes two sorted arrays and returns a new array that
+  *combines all elements of both arrays in asorted order.
+  *@param left a sorted array (this is a precondition)
+  *@param right a sorted array (this is a precondition)
+  *@return a sorted array that contains all elements of left and right
+  */
+  public static int [] merge(int [] left, int[] right){
+    //********************
+    //COMPLETE THIS METHOD
+    //********************
+    return new int[1];//so this compiles.
+  }
+
+  /*mergesortH is the actual recursive mergesort method.
+  *@param data the array to be sorted
+  *@return a new array that is the sorted version of data.
+  */
+  public static int[] mergesortH(int [] data){
+    //********************
+    //COMPLETE THIS METHOD
+    //********************
+    /*
+    if more than 1 element{
+      L = get left half
+      R = get right half
+      sort each half using mergesortH (not the wrapper)
+      merge them together and return that array
+    }
+    */
+    return new int[1]; //so this compiles
+  }
+
+
+
+
+
+
+  /* DO NOT MODIFY THE WRAPPER METHOD (Unless you are writing the faster version) */
+
+
+
+
+  /*mergesort uses the recursive mergesortH method to create a sorted
+  *version of the array. It then copies the data back into the original
+  *array. (This is for compatibility with prior sort testers)
+  *@param data the array to be sorted, this will be modified by the method
+  */
+  public static void mergesort(int [] data){
+    int [] temp  =  mergesortH(data);
+    for(int i = 0; i < data.length; i++){
+      data[i] = temp[i];
+    }
+  }
+
+}
+go back to the top of the page
+
+
+2023-03-15
+Mergesort!
+Discuss
+Let us define merge: Given two sorted arrays, combine them into one single sorted array.
+What algorithm could you use to merge two arrays?
+What is the runtime to take two sorted arrays and then combine them into one big sorted array?
+Merge
+How can we write a merge method?
+These are a few different equivalent ways to write a merge method:
+Take two arrays and return a new one.
+public static int[] merge(int [] left, int[] right)
+Take three arrays, where one of them is a destination array.
+public static void merge(int[] destination, int [] left, int[] right)
+
+Mergesort
+It is faster to split an array into two halves, sort each half and merge them together.
+For n2 sorts it is twice as fast to sort 2 halves and merge them together!
+But what if our sort method mergesort() was to split in half and mergesort each half?
+If you do this recursively until the arrays are size 1, then you don't have to use a sort method to sort each half, because a size 1 array is already sorted!
+Visually:
+
+The red section is where the recursive calls split into sub-arrays. The green section would be when the values return and merge
+Main lab solution:
+Note: You will need a wrapper method for mergesort that only takes a single array as a parameter and modifies that array.
+    Your recursive methods can do whatever you like, but must ultimately copy the sorted data into the original array. 
+
+    The easiest option is to do more array copies. Merge will return a new array, as will the recursive mergesort.
+    This is the required solution so that people do not get stuck but still get an nlogn sort.
+    Do this before you do anything extra.
+
+  
+Pseudocode:
+
+int[] mergesort(data){
+  if more than 1 element{
+    L = mergesort left side
+    R = mergesort right side
+    return merge(L,R)
+  }else{
+    return data;
+  }
+}
+  
+
+    A faster and better way, is to make your mergesort not return copies of the array.
+    Instead make 1 extra array and go back and forth between the two.
+    Both the merge and mergesort will be void functions that take a range (lo,hi), a source array, and destination array:
+  
+
+void mergesort(data,dest,lo,hi){
+  if more than 1 element{
+    mergesort(left side)//swap data and dest
+    mergesort(right side)//swap data and dest
+    merge(...)
+  }
+}
+  
+Classwork/Homework:
+Make a classwork repo folder: 03-15-merge and write+test the following method:
+public static int[] merge(int [] left, int[] right)
+go back to the top of the page
+
+
+2023-03-14
+happy τ/2 day!
+Runtime Analysis
+Overall Idea
+We are interested in how quickly an algorithm runs relative to the input of the problem. Generally, we think of N as the input size (a list with N elements), but N could be the actual input (such as when calculating the Nth term of a series, or the Nth prime.)
+We do not care about an exact number of seconds. Instead, think along the lines:
+ "How MUCH LONGER does it take when we double N? And when we double N again?" 
+Every time you double the input:
+
+If the time stays the same, we say it runs in constant time.
+If the time increases by a constant factor (double triple or something similar), we say it runs in linear time. The constant (slope of the line) is not important.
+If the time increases more and more each time you double, then it may be a more complex polynomial time (n2, n3, etc.) exponential, or even worse.
+
+We care about very large input sizes, we want to know how the algorithm behaves as N gets "arbitrarily large."
+ Examples 
+Constant time doesn't increase when you increase the input. This is also called O(1)
+
+    public int foo(int [] ary){
+      return ary[0];
+    }
+  
+linear time O(n) 
+
+    public int foo2(int [] ary){
+      int total = 0;
+      for( int i = 0; i < ary.length; i++){
+        total += ary[i];
+      }
+      return total;
+    }
+We can define the input however we like, in the next example we can consider it to be  O(n) where n = rows * cols
+      or we can say this is O(rows*cols) as well. It depends on what you consider the N to be.
+
+        public int foo2(int [][] ary){
+          int total = 0;
+          for( int i = 0; i < ary.length; i++){
+            for( int j = 0; j < ary[i].length; j++){
+              total += ary[i][j];
+            }
+          }
+          return total;
+        }
+      
+Quadratic time O(n2) 
+public int foo3(int [] ary){
+        int total = 0;
+        //outer loop runs N times.
+        for( int i = 0; i < ary.length - 1; i++){
+          //inner loop runs N times
+          for( int j = 1 ; j < ary.length; j++){
+            total += ary[i]*ary[j];
+          }
+        }
+        return total;
+      }
+     
+Big O notation
+We designate the growth using the notation above. 
+O(n) is read as: "oh of n" "big oh of n", or "order n"
+Consider the functions:
+ When you double the size of ary, how much more work is required?
+public int foo2(int [] ary){
+      int total = 0;
+      for( int i = 0; i < ary.length; i++){
+        total += ary[i];
+      }
+      total+=1;
+      total+=3;
+      return total;
+    }
+  
+
+    
+      public int foo4(int [] ary){
+        int total = 0;
+        for( int i = 0; i < ary.length; i++){
+          total += ary[i];
+        }
+        for( int i = 0; i < ary.length; i++){
+          total += ary[i];
+        }
+        return total;
+      }
+    
+  
+Since they both double the runtime as we double the input size, we consider both N and 2*N to be just O(N)   where N is the length of the array.
+No Constants / Largest Term
+When writing big-O notation:
+Most Significant
+We only look at the most significant term. Looping over an array then adding two numbers is just O(n)
+N + 10 is just O(N)
+N^2 + 5N is just O(N^2)
+The reason is that as N becomes very large, the smaller terms become far less significant.  Consider: When N is a million, the difference between N^2 and 5N is very large.
+constants
+We ignore any constants. Looping over an array twice is still O(n)
+The reason for this is that doubling the n each time is not affected by a constant.
+e.g. 5n is still twice as large when n is doubled, so the 5 is not important.
+Multiple operations:
+Subsequent operations are added to eachother.
+Nested loops tend to multiply eachother. The exeption is if the inner loop does not always happen due to a conditional.
+If f(x) is a sum of several terms, if there is one with largest growth rate, it can be kept, and all others omitted. 
+If f(x) is a product of several factors, any constants (terms in the product that do not depend on x) can be omitted.
+Always assume the worst case
+Upper Bound:
+Sometimes the algorithms we write can stop early. This is great! Except we tend to consider the worst case scenario.
+O(N) is an upper bound; in other words the worst case. Your bubble sort can finish after one pass, but is still O(n2)
+Runtime Graphs
+
+
+Sort comparison
+Diagram from class is important...
+The O(n2 sorts are touching approximately half of the square (nxn square) of values. The diagram shows this via shading. This means that n2/2 work is being done, which is just n2 when you ignore the constant.
+
+Using big-O notation for quicksort, we get O(nlog⁡n) if we assumed equal splits. This actually works even if you get a 3:1 split (25%/75%), which would happen half of the time.
+The diagram below shows that there are log2n levels of the recursion each of which has a linear pass that takes O(n) time and . 
+
+go back to the top of the page
+
+
+2023-03-13
+Discussion of Quicksort
+
+How it works
+Best case
+Worst case
+Runtime analysis
+
+Lab deadline
+Your partition / quickselect / quicksort lab will be due on Wed.
+go back to the top of the page
+
+
+2023-03-10
+Happy
+    M
+A
+R
+1
+0
+  day!
+Quicksort
+Please add the quicksort method from this page to your lab. You will also complete quicksort.
+Quickselect turns into the quicksort!
+Quickselect
+By partitioning repeatedly, we can find the kth smallest element, when you partition, compare the pivot index to the index you want. Then partition the "half" of the sub-array that contains the index you want. In this case, the target is index 0, or the smallest:
+
+Notice that if we do this, the array becomes partially sorted. Every pivot we chose, is in the correct sorted position!
+By partitioning repeatedly such that when you partition, You then re-partition BOTH halves of the sub-array, all values will ultimately go into the correct postion.
+
+Alternative image that has the ending array that aligns with the partitions etc:
+
+Quicksort
+Effectively, quicksort is a quickselct where you partition BOTH sides of the pivot value. Each of those will partition both sides of their pivot values... 
+This sounds like a job for...
+RECURSION
+Yes quicksort is recursive. Your quicksort will partition and then  call quicksort on each half of the partitioned array. This means you need a quicksort method that has a low/hi or start/end index. The quicksort(int[]) method must be a wrapper method.
+If your partition method works, this method is rather easy. This is why you wrote a quickselect, a non-recursive method that requires a working partition.
+Runtime
+This will be discussed on Monday.
+On average quicksort is O(nlogn) 
+Worst case quicksort is O(n2) 
+Required Lab Addition: Quicksort
+Note: Very fast on random data, but unsuitable for mission-critical applications due to the very bad worst-case behaviour.
+This is a wrapper method. You need to know the range of values that the current sub array is working on (e.g. lo/hi OR start/end )
+
+Please test on various arrays of size 1million+
+      :  Sorted arrays, Reverse sorted arrays, arrays with one value, arrays that are random values.
+      By doing this you will know if you ended up with quadratic time or not. (quadratic will not complete with size 1million arrays)
+    
+
+/**Quicksort wrapper method, starts the recursion from 0 to len-1 inclusive.
+ */
+public static void quicksort(int[]data){
+  quicksort(data,0,data.length-1);
+}
+
+/**Quicksort
+ *@param lo is the lower index inclusive
+ *@param hi is the upper index inclusive
+ *@param data is the array to be sorted
+ *@postcondition The array between lo and hi should be sorted.
+ */
+public static void quicksort(int[]data,int lo,int hi){
+  //your code.
+}     
+Note on partition
+Both quicksort and quickselect are based on your partition method.
+You can write BOTH methods with the same partition method, and can improve the partition at the end.
+Optional Addons to quicksort lab:
+If you want to have your faster quicksort tested for speed:
+Make a  fastQuicksort(int[])  method. To get fast times you should try to implement:
+
+Dutch Flag Partitioning as per yesterday's lecture. This should be a different partition method from your original quicksort.
+Randomly choose not one, but three elements from the subarray, and take median of the three as the pivot.
+When the sub-array is small, switch to insertion sort. You can experimentally figure out when to do this.
+
+go back to the top of the page
+
+
+2023-03-09
+Quickselect
+By partitioning repeatedly, we can find the kth smallest element, when you partition, compare the pivot index to the index you want. Then partition the "half" of the sub-array that contains the index you want. In this case, the target is index 0, or the smallest:
+
+Please test QuickSelect on various arrays of size 1million+ try with all the same value, or with sorted/reversed values
+go back to the top of the page
+
+
+2023-03-08
+Do now:
+
+
+     Assume your partition puts values equal to the pivot on the less than side of the partition.
+     When using an array with all equal values, where will your pivot end up?
+   
+What is the runtime of finding the kth smallest value in this case? 
+What are some possible work arounds for this?
+
+Your work so far:
+public static int partition(int[]data ,int lo, int hi){
+   //your code.
+   return j;
+}
+Notice how partition should look before and after when your partion method chooses a pivot value (labeled v in this diagram)
+
+This process continues until i passes j (there are no values left.) at which point you swap v into the middle.
+Make sure you implemented the following:
+
+ When choosing a pivot, use a random index.
+
+     When data element are equal to the pivot, place half of the equal values on the left side of the pivot and half on the right. You can alternate left and right as you find equal values by maintaining a variable to keep track of this.
+   
+
+Testing
+Example of one test:
+
+int [] data = new int[] {994,995,996,4,3,2,1,0,997,998,999}
+System.out.println("Original: "+Arrays.toString(data));
+int pivot = partition( data , 3, 7);
+System.out.println("Pivot value: "+data[pivot]+ ", Pivot index: "+pivot);
+System.out.println("Modified: "+Arrays.toString(data));
+System.out.println();
+  
+Requirements:
+
+partition
+quickselect
+
+
+   /*@return the position of the pivot index after
+    *placing the pivot in the correct location as follows:
+    *All values <= pivot are at lower indices than the pivot
+    *All values >= pivot are at higher indices than the pivot
+    *@param lo is the lower index inclusive
+    *@param hi is the upper index inclusive
+    *@param data is the array to be partitioned
+    *@postcondition The array may be modified.
+    */
+   public static int partition(int[]data ,int lo, int hi){ }
+
+   /*return the value that is the kth smallest value of the array.
+    *@param data must have a length > 0
+    *@param k is 0 to data.length-1 inclusive
+    *@postcondition The array may be modified.
+    *@return the value of the kth smallest integer.
+    *Note that when k=0 return the smallest.
+    */
+    public static int quickselect(int []data, int k){ }
+ 
+Lab repo here:
+https://classroom.github.com/a/g7HlUIJU 
+go back to the top of the page
+
+
+2023-03-07
+Classwork + Homework
+
+    You must write, and thoughroughly test this method.
+    It will be critical for the next assignment and:
+     SHOULD NOT UNDER ANY CIRCUMSTANCES USE THE METHOD BEFORE IT IS TESTED!!!!
+
+
+    Drop it in the classwork repo 03-07-QuickSelect/ in a java file
+    Preliminary.java
+
+You are writing a function to modify an array as follows:
+
+    /*Modify the array as per directions above.
+    *@return the index of the final position of the pivot element.
+    */
+    public static int partition( int [] data, int start, int end){
+    }
+  
+
+
+      A random index from start to end inclusive is chosen, the
+      corresponding element is designated the pivot element.
+    
+
+      All elements in range that are smaller than the pivot element
+      are placed before the pivot element
+    
+
+      all elements in range that are larger than the pivot element are
+      placed after the pivot element.
+    
+
+      Only the indices from start to end inclusive are considered in range
+      no other indices should have their values changed.
+    
+
+Testing your code:
+
+    How can you test this method so you can easily verify it is working?
+
+  
+ Hint: Visually easy to look at arrays will be your friend:
+new int[]{990, 991, 992, 4, 3, 2, 1, 0, 993, 994, 995}
+new int[]{990, 991, 992, 993, 994, 8, 7, 6, 5, 4, 3, 2, 1, 0, 995, 996, 997}
+new int[]{990, 991, 992, 993, 994, 995, 996, 997, 8, 7, 6, 5, 4, 3, 2, 1, 0}
+etc.
+
+    Run the method on the middle section.
+    Print out the pivot and the array after partitioning and see if it worked.
+    Repeat this a few times to see if all pivots work. After that try different arrays/indices.
+  
+Required:
+Write test cases that you would use for arrays such as the above.
+Which indices should be used for start/end for the examples above?
+Why are the arrays above useful?
+Which additional arrays should you write to test your code? (What do the above cases NOT test?)
+Speed
+
+    Making this work CORRECTLY is paramount over speed. If you cannot do this using just the single array,
+    then making a temporary array is slow but better than broken. You can optimize for speed later.
+  
+If you use a temporary array, make a really big comment to remind you that this is 2-3 times slower than it should be. 
+go back to the top of the page
+
+
+2023-03-06
+Reminder Quiz this week
+Recursion and recursive backtracking.
+
+Discussion of maze carver
+The algorithm is the same as the maze solver with a different boolean to determine if you can keep going.
+
+//can carve: not on border, not a space, fewer than 2 neighboring spaces
+if(canCarve(board,row,col)){
+  //change to a space
+
+  //make an arrayList of directions i made the directions: [row offset , col offset]
+  ArrayListdirections = new ArrayList();
+  //fill up the arrayList Here
+
+  while(directions.size() > 0){
+    //choose a direction randomly:
+    direction = remove a random one from the arrayList
+    call maze generator in that direction
+  }
+}
+    
+  
+Quick!
+Quick! Find the k'th smallest value
+Note: Some students (are behind)/(will fall behind) due to various trips or other reasons. In class, you must work on the current material because the lessons + lab will build on it. Work on old material outside of class.
+Discuss: 
+How can we quickly find the k'th smallest element from a list of n values? Note: This can be of any comparable type so there is a set order, but we can worry about integers for the sake of keeping the algorithm simpler.
+Think of several methods to do this, starting with naive and slow, then try to be more creative!
+e.g.
+4th smallest of: [17, 61, 67, 47, 93,12, 20, 4, 44, 68]
+3rd smallest of: ["dog", "cat", "elephant", "zebra", "fish","bison", "buffalo", "black bear", "brown bear", "polar bear"]
+Notes are Diagrams from class!
+Please check notes from classmates.
+go back to the top of the page
+
+
+2023-03-02
+Maze Solver Update
+ Deadline Moved to Tuesday. 
+Required Change: Add a main to your Maze.java that will print a randomly generated maze when run. It takes 2 integers as command line arguments, which are the number of rows, and number of columns.
+I suggest you write a static void carve(char[][] maze, int row, int col) method. You give it 2D array filled with '#' and it will carve a random maze.
+Your final random maze will include the 'S' and 'E'characters as well
+$java Maze ROWS COLS
+Sample Usage of main: (re-running the program will produce different results each time.)
+java Maze 10 20
+Output:
+####################
+#S  ##   # ##   # ##
+# #    #      # #  #
+# # # #  ## # #  # #
+#  ###  ###  #  #  #
+##  # # ## #  #  # #
+# # # #    # #  ## #
+# # #  ##### # #  E#
+#    #       #   # #
+#################### 
+java Maze 5 8
+Output:
+########
+#   # E#
+### ## #
+#S     #
+######## 
+go back to the top of the page
+
+
+2023-02-28
+Maze Solver
+This lesson requires diagrams from class.
+Please make sure you copy accurately.
+Repo for Lab03-Maze
+https://classroom.github.com/a/h2at3-1c 
+Constructor
+You may assume the file contains a rectangular ascii maze, made with the following 4 characters:
+
+'#' - Walls - locations that cannot be moved onto
+' ' - Empty Space - locations that can be moved onto
+'E' - the location of the goal if any (0 or more per file)
+'S' - the location of the start(exactly 1 per file)
+
+You must:
+
+ load maze text file
+ sets animate to false by default.
+ Set startRow and startCol based on the position of the 'S' in the maze file.
+  When the file is not found then:   throw a FileNotFoundException
+
+Make sure your file reading is able to handle this: maze files can have blank
+  newlines at the end of the file because some text editors include a newline
+  at the end of a file, but that MAY not be present.
+toString
+Return the string that represents the maze. It should look like the text file with some characters changed by solve.
+solve(int row, int col)
+The recursive solve method takes a row/col position.
+
+The 'S' is replaced with '@'
+The 'E' remain the same
+All visited spots that were not part of the solution are changed to '.'
+All visited spots that are part of the solution are changed to '@'
+
+Color your output with this command:
+java MazeDriver | sed -e 's/#/\x1b[47;39m#\x1b[39;49m/g' -e 's/@/\x1b[33m@\x1b[39;49m/g' -e  's/\./\x1b[49;32m\.\x1b[39;49m/g' 
+go back to the top of the page
+
+
+2023-02-27
+Using files!
+
+    Your goal is to be able to read in a file, and use that information in your program.
+    You have done this before but to get ahead for the next assignment you want to be able to do today's work!
+  
+ Reminder1: Files are useful.
+ Reminder2: Checked vs. Unchecked exceptions.
+
+    Checked Exceptions are the exceptions that are checked at compile time.
+    If some code within a method throws a checked exception, then the method must either:
+  
+
+handle the exception using try catch
+declare that it throws the exception using throws keyword in the  method header.
+
+
+    An example of a checked exception is the FileNotFoundException which requires a try/catch
+    block (handle it) or that you can have the method declare that it will throw the exception (as in the following example)
+  
+
+    Note: You can also state that it throws a superclass of the exception. e.g.
+    A method that doesn't catch a FileNotFoundException method can state that:
+  
+
+throws FileNotFoundException
+throws IOException
+throws Exception
+
+When to use throws
+
+    You only need to use throws when you do not intend to catch a checked exception in the current method.
+    This could be because the method doesn't have enough information to decide what to do if the exception occurs,
+    but you could do it in a different method.
+   
+An example of when you would want this to occur is as follows: 
+
+    You want to read from a file, but put the code that opens and reads the file into a dedicated method that returns the data.
+    You pass a file name into that method and it will return some data, BUT you don't want that method to handle the file not found exception.
+    This is because it doesn't know how / can't return a valid value.
+  
+In that case your main can handle the error with a try/catch  FileNotFoundException , and when the exception occurs no value would have been returned from the file reading method.
+In order to do this your method (in this case  the method getValuesFromFile(String filename))  is declared to throw the  FileNotFoundException
+
+    import java.io.File;
+    import java.io.FileNotFoundException;
+    import java.util.Scanner;
+    public class ReadFile {
+      public static int[] getValues(String filename) throws FileNotFoundException{
+        File text = new File(filename);
+        //code here to read file into array
+        //return SOME_ARRAY;
+      }
+
+      public static void main(String args[]){
+        int[]nums1,nums2;
+        try{
+          nums1 = getValues("Numbers.csv");
+        }catch(FileNotFoundException e){ //error handling code example:
+          //if an empty array is acceptable you could use one here
+          nums = new int[0];
+        }
+
+        try{
+          nums2 = getValues("Numbers2.csv");
+        }catch(FileNotFoundException e){ //error handling code example:
+          //can handle error differently here!
+        }
+        //do stuff with the array.
+      }
+    }
+  
+
+    It is FAR better to catch the exception and handle it. You never want to have your main declared to throw anything. You DO sometimes want your other methods to throw checked exceptions so that a different method can catch them.
+  
+Also remember if your file is NOT in the same directory as your program, the filename can be a path such as: 
+"/full/path/to/file.txt" or "data/file.txt"
+Arrays.toString()
+Remember you can convert an arra to a string using built in methods! You should not be doing that by manually for testing purposes unless you need to do formatting changes such as 'Q' and '_' in N-Queens.
+For 1D arrays, Arrays.toString(oneDArray) gives you "{1, 2, 9, 8}" or similar.
+For 2D arrays, Arrays.toString(twoDArray) does not work the way you may like... try it out and see.
+There is a function for 2D arrays as well, just look at the documentation for Arrays: https://docs.oracle.com/en/java/javase/14/docs/api/java.base/java/util/Arrays.html 
+Classwork:
+
+    ###################################
+    #   #         #   #   #     # # #E#
+    # # ### ######### # # # ### # # # #
+    # # #   #           #   #         #
+    # # # ### ######### ##### ### ### #
+    # # # # #   #     #   #     # # # #
+    ### # # ### # # ### # # # ### # ###
+    #S            #   # # # # #   #   #
+    ###################################
+
+
+
+Place this maze into a text file Maze1.txt .
+Please do not add any spaces before/after the lines. Keep the newlines the way they are.
+
+
+        Write a method that reads the file into a 2d array of characters and returns the array.
+        You do not know the dimensions of the maze ahead of time. You can assume it is rectangular but nothing else.
+      
+Write a method to print the 2d array as one 1D array per line just to see if it looks right.
+Write a method that converts the 2d array to a string that look like the text file (no spaces or commas etc.)
+
+Complete at home if you are unable in class.
+go back to the top of the page
+
+
+2023-02-16
+There is a table of correct countSolution() results at the end of today's notes.
+Animation
+Animation is an optional but low effort addon to the lab.
+There are some methods/variables not used by solve that are used for facilitating animations:
+private boolean animated - solve will print the animation when this is true, print nothing otherwise. The default value is false.
+private int delay - the wait time in your animation, defaults to 1000.
+public void setAnimate(boolean newValue) - set the animated variable to the specified value 
+public void setDelay(int newValue) - set the delay variable to the specified value, any value < 0 should set the value to 0 
+This means that you can just add the following code after you successfully add/remove a queen:
+
+if(animated){
+  Text.go(1,1);
+  System.out.println(this);//can modify here
+  Text.wait(delay);
+}
+  
+You may modify the animation print with colors, but NOT the default toString!
+Sample main:
+usage:   java Program [SIZE [DELAY]] 
+If no size is given, size will be 8, and animate will be false
+If SIZE is provided, you may optionally provide a DELAY value. This will turn animate on, and use that DELAY value for the delay
+e.g.
+java Solver will print a solution to an 8x8 board.
+java Solver 7 will print a solution to an 7x7 board.
+java Solver 6 1000 will animate the solving of a 6x6 board
+
+int SIZE = 8;
+if(args.length > 0){
+  SIZE = Integer.parseInt(args[0]);
+}
+QueenBoard b = new QueenBoard(SIZE);
+if(args.length > 1){
+  b.setAnimate(true);
+  b.setDelay(Integer.parseInt(args[1]));
+}
+System.out.println(Text.CLEAR_SCREEN);
+System.out.println(Text.HIDE_CURSOR);
+Text.go(1,1);
+b.solve();
+System.out.println(Text.RESET);
+Text.go(1,1);
+System.out.println(b);
+  
+Number of solutions for N-Queens
+
+NSolutions
+11
+20
+30
+42
+510
+64
+740
+892
+
+go back to the top of the page
+
+
+2022-02-15
+Nqueens Lab solve()
+Do Now:
+Type your password to log in (5 seconds), close your laptops.
+In your notes: Write a pseudocode for a boolean solve(int row) method that returns when it finds the first solution.
+Assume your add/remove methods work.
+
+    Your wrapper solve() method calls solve(0) to start the recursion on the starting row.
+    Hint: This suggests your recursion increments the row
+  
+Decide on your base case first!
+Feel free to discuss with your neighbors.
+
+pseudo code for n-queens:
+boolean solveR(int row)
+  Base Case if placed all queens:
+    return true
+  for each column:
+    //using addQueen's boolean in an if statement
+    //still adds the queen to the board.
+    if addQueen(column):
+      if solveR(row+1):
+        return true
+      else:
+        removeQueen(column)
+
+    //after for loop, there is no solution
+    return false
+    
+
+Animation code
+Use this code in your solve to help you debug!
+Place it after you successfully add a queen, and if you want to see the removals as well then also place it after you remove a queen.
+
+    Text.go(1,1);
+    System.out.println(this);//can change this to your debug print as well
+    Text.wait(delay);
+  
+Just make sure in your main you do the following:
+
+    QueenBoard q = new QueenBoard(4);
+    System.out.println(Text.CLEAR_SCREEN);
+    System.out.println(Text.HIDE_CURSOR);
+    Text.go(1,1);
+    q.solve()
+    System.out.println(Text.RESET);
+  
+go back to the top of the page
+
+
+From StuyQuantum:
+Hi everyone!
+StuyQuantum will be having a guest speaker event on Thursday, February 16th virtually at 7:30 pm. Our speaker, Dripto Debroy, is a research scientist with Google Quantum AI. He has a PhD in Theoretical and Mathematical Physics from Duke University and he is a Stuy alumni! Please come if you're interested in hearing about his research and his journey in this field!
+For more information about him and our event, check out our insta(@stuyquantum) and our stuyactivities( https://stuyactivities.org/stuyquantum ).
+Fill out this form if you're interested: https://forms.gle/NxpYm24kzntsRtqu5 
+Thank you!
+Lab02
+Assigned: 2022/02/14
+Due: 2022/02/17
+
+    N-Queens Lab
+  
+The intended number of days (class+home) to get this working is 4:
+This lab is due at the end of the school day on Friday.
+
+1st day: Constructor , toString(), add()/remove(). A debugToString() is also helpful.
+2nd day: Discussion of solve including generating pseudocode (+new notes). Work on solve
+3rd day: Finish Solve, Write countSolutions .
+4th day: Discussion of animation (+new notes) Animation is optional for the lab but very satisfying.
+
+Instructions
+
+ Lab02 Repo: https://classroom.github.com/a/UUeau4r1 
+Suggestion: Make a driver file to test your QueenBoard class.
+
+
+Implementation details
+
+      Note: There are faster ways of doing this algorithm, such as maintaining just a list of the prior queen's positions.
+      Please follow the prescribed algorithm and data structure as it fits into a sequence of labs.
+    
+
+For your QueenBoard class you are to use a 2d array of integers.
+You should represent a queen with a -1.
+You should represent the number of queens threatening a square with that integer. e.g. a 3 on the board means 3 queens are threatening it.
+You should only calculate threatend squares BELOW each queen (incuding downward diagonals).
+This would allow us to mark squares and quickly decide if we can place a queen in a particular square.
+
+
+Instance Variable:
+private int[][]board;
+The board will be an instance varible so that after it is solved, you can use toString(), also so you do not need to pass in the board into your recursive calls. This means if you change the board, you must UNDO your changes before trying a new 
+Note: detailed method specifications are listed below the summaries.
+Private method summary:
+
+private boolean addQueen(int r, int c) adding a queen to a location may not be possible so we want to have a way to determine if it worked. Returning false means the board is not modified. Returning true means the queen was successfully added to the location.
+private void removeQueen(int r, int c) removing a queen should always work because you only remove a queen that was added.
+
+TEST your add/remove manually and make sure that they work before you start to write any solver!
+Public methods/constructor summary:
+
+public QueenBoard(int size){}  : initialize a size by size 2d array. All values should be 0
+public String toString(){}  : format should be: "_ _ Q _\nQ _ _ _\n_ _ _ Q\n_ Q _ _" also noted in the comments below. 
+public boolean solve(){}  note: wrapper method
+public int countSolutions(){}  note: wrapper method
+
+Note: you can modify to string to help you debug by showing integers
+Note: you can test private methods from a main in the same class, OR by making them public temporarily for testing purposes.
+Method requirements:
+
+/**
+*@return The output string formatted as follows:
+*All numbers that represent queens are replaced with 'Q'
+*all others are displayed as underscores '_'
+*There are spaces between each symbol:
+_ _ Q _
+Q _ _ _
+_ _ _ Q
+_ Q _ _
+*excludes the leading spacing(indents for the code in this file.)
+* in string format: "_ _ Q _\nQ _ _ _\n_ _ _ Q\n_ Q _ _"
+*/
+public String toString(){}
+
+/**
+*@return true when the queen added correctly, false Otherwise
+*@precondition r and c are valid indices of the board array
+*@postcondition the board is only changed when the function returns true
+* in which case the queen is added and all it's threatened positions are incremented
+*/
+private boolean addQueen(int r, int c){
+
+}
+
+/**Remove the queen that was added to r,c
+*@precondition r and c are valid indices of the board array and there is a queen at position r,c
+*@postcondition the board is modified to remove that queen and all it's
+*threatened positions are decremented
+*/
+private void removeQueen(int r, int c){
+
+}
+
+
+/**Find the first solution configuration possible for this size board. Start by placing
+*  the 1st queen in the top left corner, and each new queen in the next ROW. When backtracking
+*  move the previous queen to the next valid space. This means everyone will generate the same
+*  first solution.
+*@postcondition: the board remains in a solved state.
+*@return false when the board is not solveable and leaves the board filled with zeros;
+*        returns true when the board is solveable, and leaves the board in a solved state
+*/
+public boolean solve(){
+
+}
+
+
+/**Find all possible solutions to this size board.
+*@return the number of solutions found, and leaves the board filled with only 0's
+*/
+public int countSolutions(){
+
+}
+  
+go back to the top of the page
+
+
+Recursive backtracking N-Queens
+ 2023/02/13 
+Goal: Using recursive backtracking to solve an N-Queens problem
+
+Consider a chess board that is a standard 8 by 8 size.
+
+      How many queens can you place on the board such that
+      none of the queens can attack any of the others?
+    
+How would you find the locations of the queens?
+
+Note:
+
+You can only have 1 queen in each column, and in each row.
+This is trivial for a 1x1 board, impossible for a 2x2 board.
+Think about 3x3 boards or larger...
+
+Remember placing one queen eliminates a large number of squares on the board. In this diagrm the X is the queen, and the green squares are no longer safe to place queens:
+
+
+
+Placing a 2nd queen results in: (NOTE: this image is NOT correct!!!)
+
+
+
+
+ How would you solve this problem with "backtracking"?
+Backtracking is your friend
+In this diagram the X's denote an unsuccessfully placed queen.
+
+Thoughts on speed
+Duplicating the entire board each time you call the recusion would be O(n2), we do not want to do this, it would be O(n) if we were to just remove the queen after we backtrack.
+Only one queen per row/column can be added. We can make each level of recursion consider the current row and no other rows.
+If the recursion can do this, we do NOT need to mark squares as threatened if they are in the same row or higher.
+By only marking threatened squares below the current row, we save some computation and make add/remove faster. While it is still O(n) the coefficient is much lower: you send out 3 'threat lines', instead of 8.
+
+
+
+Alternate methodology
+There are many ways to approach this problem that we will NOT do:
+You can store a list of currently added queens and loop over only the added queens to check for threats. (This is faster)
+You can modify the algorithm to place n queens and randomize the positions to find a solution.
+Consider we want to write methods to add/remove
+
+/**
+*@return true when the queen added correctly, false Otherwise
+*@precondition r and c are valid indices of the board array
+*@postcondition the board is only changed when the function returns true
+* in which case the queen is added and all it's threatened positions are incremented.
+* Only the squares below the current row should be marked as threatened.
+*/
+private boolean addQueen(...){
+
+}
+
+/**Remove the queen that was added to r,c
+*@precondition r and c are valid indices of the board array and there is a queen at position r,c
+*@postcondition the board is modified to remove that queen and all it's
+*threatened positions are decremented
+*/
+private void removeQueen(...){
+
+}
+top of the page
+
+
+2023/02/10 
+If you finish...
+I.
+Let me know of any other problems you are able to solve using recursive backtracking (projecteuler or advent of code)
+II.
+Here is a problem for students that complete the recursive backtracking:
+Given a String[][], each sub array containing at least 1 string:
+Print all sentences that are created taking one word from each list.
+
+    
+String[][]wordlists = {
+  {"The dog", "The pro skater"},
+  {"plays" , "empathises with" },
+  {"chess", "ball", "the voiceless masses"}
+};
+permute(wordlists,"",0);
+    
+  
+
+    
+//current is the current index, which starts at 0 when you invoke the method in your main
+//the sentence starts at "", the recursion concatenates the words
+//base case should print the sentence
+public static void permute(String[][]lists, String sentence, int current){
+}
+    
+  
+Output would be:
+
+The dog plays chess
+The dog plays ball
+The dog plays the voiceless masses
+The dog empathises with chess
+The dog empathises with ball
+The dog empathises with the voiceless masses
+The pro skater plays chess
+The pro skater plays ball
+The pro skater plays the voiceless masses
+The pro skater empathises with chess
+The pro skater empathises with ball
+The pro skater empathises with the voiceless masses
+  
+go back to the top of the page
+
+
+ 2023/02/09 
+More Practice
+Deadline: Tuesday Feb 14th
+Once you complete groupSum and splitArray you will be working on the variations posted in condingbat:
+The section Recursion for Real https://codingbat.com/home/konstans@stuy.edu/apcs2 (groupSum, splitArray, groupSum6, groupNoAdj, splitOdd10, split53, groupSum5, groupSumClump)
+Remember that: Your commits + commit messages combined with your codingbat results will be counted as homework+classwork.
+Since it is classwork/homework and weighted less I will be more critical of the components that are not "does the code work".
+You have 2 in class days to work on this. (Thurs/Friday)
+Also note that "Recursion warm up" is not assigned for this semester and can be safely ignored.
+go back to the top of the page
+
+
+ 2023/02/08 
+Classwork + Homework
+New Folder: CLASSWORK_REPONAME/02-08-recursion/Backtracking.java 
+You may include your mainn inside of Backtracking.java . Please make your methods static (coding bat does not use static)
+
+countNoDoubleLetterWords
+groupSum
+splitArray
+
+By tomorrow
+You should have completed countNoDoubleLetterWords and groupSum. If you were able to complete splitArray that means you are doing really well, but it is not required as you will have more time in class (more problems will be added however.).
+We will go over group sum as a class, here is the problem to read:
+Group Sum
+
+    Given an array of ints, is it possible to choose a group of some of the ints,
+    such that the group sums to the given target?
+  
+
+    This is a classic backtracking recursion problem. Once you understand the recursive backtracking
+    strategy in this problem, you can use the same pattern for many problems to search a space of choices.
+    Rather than looking at the whole array, our convention is to consider the part of the array starting
+    at index start and continuing to the end of the array. The caller can specify the whole array simply
+    by passing start as 0.
+ public static boolean groupSum(int start, int[] nums, int target) {}
+No loops are needed -- the recursive calls progress down the array.
+Examples:
+
+    groupSum(0, [2, 4, 8], 10) → true
+    groupSum(0, [2, 4, 8], 14) → true
+    groupSum(0, [2, 4, 8], 9) → false
+  
+more no double letter words
+This is similar to your makeWords() method from last semester , however you should not USE your old method. If you called the old method you would print a bunch of words and that isn't what you want.
+Note: The method returns a long. The number 7 can be written: 7l [number followed by lower case L] or (long)7 [via typecasting]
+/*
+  *@param length how long the words must be
+  *param word the variable to store the partial solution (Initial call should start at "")
+  *@return the number of words that have no adjacent matching letters using the letters a-z.
+  *Repetition allowed except when letters are adjacent.
+  */
+  public static long countNoDoubleLetterWords(int length,String word){
+  //Hint: not a wrapper method, but you must call it starting with "" as your word.
+  }
+This can be verified by calculating the result as 26*25^(length-1) Because the 1st character can be any letter(26 options), and each subsequent character can be anything except the previous (25 options)
+You can easily change this to be more powerful if you had more complicated rules such as "vowels can be doubled, but not consonants." or "t and g can be doubled but only after a vowel". It would be MUCH more difficult to come up with an analytical way to count those words.
+split array
+groupSum and splitArray are both in the section "Recursion for Real" problems on codingbat:
+ https://codingbat.com/home/konstans@stuy.edu/apcs2
+You are NOT to edit and test your code inside of codingbat, I want to see your workflow using github.
+Your commits combined with your codingbat results will be counted as homework+classwork.
+For now:  complete countNoDoubleLetterWords + groupSum and try your best at splitArray 
+go back to the top of the page
+
+
+ 2023/02/07 
+Late work
+Late work will not be counted unless you fill out this form when you submit it: Late Work Form 
+Even if you email me this form must be completed, as your email only serves to remind me to check the form.
+This includes late work that you do not use late tokens on.
+Part I. Paper recursion!
+
+    Consider a function meant to reverse a string:  public static String reverse(String s){}
+    You will NOT use a computer, your goal is to solve it on paper.
+    
+What is a good base case?
+What would you do if there is one more letter than that? [Make a trace that includes the recursive call to part of the problem]
+Answer 2 again to see a pattern.
+
+    Only after writing the trace on paper should you try to write the base case
+    and recursive case out explicitly. (also on paper)
+  
+Classwork repo:
+Everyone should clone this classwork repo: https://classroom.github.com/a/hZXazHV9
+You will be told to commit specific assignments there, so please make sure you use this new repo for this semester.
+Setting up codingbat
+Log in to your account on codingbat.com
+Share your coding bat with me at konstans@stuy.edu and click submit/ok
+Change your name to be PD.LAST.FIRST with NO SPACES or apostrophes e.g.   08.smith.keiko or 10.chang.mohamed 
+Part II. Forging a better Fibonacci
+Here is an example of using recursion to behave more like a loop, while using some parameters as the extra variables.
+fibIter is a recursive function to calculate fibonacci numbers that uses tail recursion.
+You may not call the recursion more than once. This will cause the runtime to be linear.
+The way this works is that f1 and f2 always store the most recent two Fibonacci numbers (f2 being the older one in this case). This will allow you to calculate the next value in constant time.
+Since you can change the starting values of f1 and f2, be aware that this is only a Fibonacci number when you start them at 1 and 0.
+When f1 and f2 are 1 and 0 the output of fibIter(n,f1,f2) will be the nth fibonacci number such that n=0 returns 0, n=1 returns 1, n=2 returns 1 etc.
+
+fibIter(0, 1, 0) returns 0
+fibIter(1, 1, 0) returns 1
+fibIter(2, 1, 0) returns 1
+fibIter(3, 1, 0) returns 2
+...
+
+With a neighbor, draw on paper draw how fibIter(8,1,0) would calculate the correct result.
+/*
+*@param n any non-negative value
+*@return the nth term of the fibonacci sequence. 0, 1, 1, 2, 3, 5 etc.
+*/
+public static int fibIter(int n, int f1, int f2){
+  //DO NOT call fibIter more than once
+}
+
+Coding - Complete at home
+In your classwork repo: Make a folder 02-07-Fibonacci/ 
+Add your drawing to this folder named exactly fibonacci.png or fibonacci.jpg
+This means you will have CLASSWORK_REPONAME/02-07-Fibonacci/fibonacci.png 
+Develop your fibIter in this directory, FibTester.java commiting when appropriate.
+The main and fib function in the same file, and should include your test cases.
+When you think you are done, submit on codingbat here: https://codingbat.com/prob/p217031 
+If that passes all of the tests you are good, if not, copy the failed test cases to your java file and keep fixing it.
+go back to the top of the page
+
+
+ 2023/02/02 
+Do not use computers until you are instructed.
+Discussion of silver
+Diagramming this problem is critical.
+USACO Lab!
+GitLink:  https://classroom.github.com/a/bdxCV1sk
+You are writing two methods:
+
+public static long silver(String input_filename)
+public static long bronze(String input_filename)
+
+Each method takes a file name, that is assumed to be in the correct format. A sample file is provided.
+
+    You should use a  Scanner and nextInt() to step through the input files in your programs
+    as all values are integers.
+  
+Example Usage:
+
+    long ans = USACO.bronze("makelake.1.in");//this is the example in the problem
+    System.out.println(ans);
+    long ans2 = USACO.silver("ctravel.1.in");//this is the example in the problem
+    System.out.println(ans2);
+  
+
+    The Driver program provided checks if you have the same answer that is in a provided answer file. There are two test cases per USACO problem, test 1 of each is the example given in the problem.
+  
+You are given one test that works and can be checked using the commands:
+$ java Driver 1 silver
+$ java Driver 1 bronze
+You MUST create your own test cases. When you do, just increment the integer for the test number for your input/output files, e.g. "makelake.2.in" and "makelake.2.out"
+go back to the top of the page
+
+
+ 2023/02/01 
+First You must read the Bronze problem
+ You need to decipher as much as possible. It is common that students don't understand how the elevations work, but you need to look at the examples to help you reverse engineer the problem's intent.
+ You will not write any code today or tonight for these problems.
+ You will have to read the problem at least twice to understand what is going on because earlier parts may refer to variables mentioned later on!
+ Read the entire problem and get an idea of what is going on, then start over from the beginning and read again more carefully.
+ Take notes as you read!
+Second Write an outline on paper
+
+    Before you write any code you must break the problem up into multiple steps.
+    Then you can list the methods that you could write and test indepenently.
+    You will test with the sample input to make sure your code works.
+  
+Finally
+STOP. DO NOT WRITE CODE. READ THE PARTS ABOVE THIS...
+After you have an algorithmic outline (including method names and how they will fit together) on paper,
+    examine the file input format, and how you plan on using that in your code.
+All of the numbers are useful, in this case: some numbers tell you the number of rows or colums to follow.
+    This will help you write your solution knowing the number of iterations ahead of time.
+List the values in the file that will become important variables and how they will control the rest of your code.
+Homework
+Google Classroom Code given in class
+Read the silver problem at home and come up with a strategy you would use to solve it.
+There will be a google classroom slot for your idea of how to solve it.
+Submit your algorithm on google classrooms as plain text please. (not pdf, not doc, not docx etc)
+PERIOD,LAST,FIRST
+HW##, DATE
+e.g.
+9,Chizu,Anya
+HW01, 2023/02/01
+
+HW GOES HERE...
+
+USACO Problems:
+1. Bronze
+Cow Stomping / Lake Making 
+
+    In order to understand this problem you need to read it multiple times.
+    There are references to variables that are explained later in the documentation,
+    and you have to understand all of the text for cross referencing purposes.
+  
+You will spend more time reading than you would like to admit, that is fine.
+ Problem 12: Lake Making [Rob Kolstad, 2008]
+1.1 description
+  Farmer John wants his cows to help him make a lake. He has mapped
+    the pasture where he wants to build the lake by creating an  R (3 <= R <= 100) row by C (3 <= C <= 100)   column grid of six foot by six
+    foot squares and then by determining the average elevation (10 <= elev_rc <= 5000) in inches for each square.
+  
+  Additionally, he has trained the cows in "stomp digging". The burly
+    bovines travel in a herd that just exactly covers a 3x3 grid of
+    squares to a grid whose upper left coordinate is R_s,C_s (1 <= R_s <= R-2; 1 <= C_s <= C-2). The cows then stomp the ground to push
+    it down D_s (1 <= D_s <= 40) inches. The cows are quite meticulous;
+    the cows at lower elevations will not commence stomping until the
+    rest of the herd has joined them. Thus, not all the 3x3 grid is
+    necessarily stomped (or perhaps some part is stomped less than some
+    other part).
+  
+
+    Given an initial set of elevations, an ordered set of  N  (1 <= N <= 20000) stomp digging instructions, and an elevation E (0 <= E <=                    5000) for the lake's final water level, determine the volume of                    water (in cubic inches) that the lake will hold. It is guaranteed                    that the answer will not exceed 2,000,000,000.  Presume that the                    edge of the lake contains barriers so that water can not spill over                    the border.
+  
+1.2 Example walkthrough
+  Consider a small 4 x 6 pasture to be turned into a lake. Its initial
+    elevations (annotated with row/column numbers) are:
+  
+
+column: 01 02 03 04 05 06
+row 1 : 28 25 20 32 34 36
+row 2 : 27 25 20 20 30 34
+row 3 : 24 20 20 20 20 30
+row 4 : 20 20 14 14 20 20
+  
+
+    Interpreting the map, we see a hill in the upper right corner that
+    rises to elevation 36; a small hill also rises to elevation 28 in
+    the upper left corner. The middle of row 4 has a slight depression.
+    After the cow-stomping instruction "1 4 4", the pasture has these
+    elevations:
+  
+
+column:  01 02 03 04 05 06
+row 1 :  28 25 20 32 32 32
+row 2 :  27 25 20 20 30 32
+row 3 :  24 20 20 20 20 30
+row 4 :  20 20 14 14 20 20
+  
+
+    Note that only three squares were stomped down. The other six sets
+    of cows were waiting for the stompers to get to their level, which
+    never happened.  After stomping down the upper left corner with
+    this instruction "1 1 10", the pasture looks like this:
+  
+
+column:  01 02 03 04 05 06
+row 1 :  18 18 18 32 32 32
+row 2 :  18 18 18 20 30 32
+row 3 :  18 18 18 20 20 30
+row 4 :  20 20 14 14 20 20
+  
+
+    If the final elevation of the lake is to be 22 inches, the pasture
+    has these depths:
+  
+
+column:   1  2  3  4  5  6
+row 1 :   4  4  4 - - -
+row 2 :   4  4  4  2 - -
+row 3 :   4  4  4  2  2 -
+row 4 :   2  2  8  8  2  2
+  
+
+    This yields a total aggregated depth of 66 inches. Calculate the volume by multiplying
+     66 x 6 feet x 6 feet = 66 inches x 72 inches x 72 inches = 342,144 cubic inches.
+  
+1.3 program specifications
+Write a program to automate this calculation.
+INPUT FORMAT:
+The name of a file with the following format:
+* Line 1: Four space-separated integers: R, C, E, N
+
+    * Lines 2..R+1: Line i+1 describes row of squares i with C
+    space-separated integers
+  
+
+    * Lines R+2..R+N+1: Line i+R+1 describes stomp-digging instruction i
+    with three integers: R_s, C_s, and D_s
+  
+
+    SAMPLE INPUT (file makelake.in):
+  
+
+    4 6 22 2
+    28 25 20 32 34 36
+    27 25 20 20 30 34
+    24 20 20 20 20 30
+    20 20 14 14 20 20
+    1 4 4
+    1 1 10
+  
+INPUT DETAILS: As per the example from the text.
+OUTPUT FORMAT:
+  * Line 1: A single integer that is the volume of the new lake in cubic
+    inches
+SAMPLE OUTPUT:
+342144
+
+--End problem 1.--
+2. SILVER
+Cow Travelling [Aram Shatakhtsyan, 2007]
+This problem the algorithm is more difficult than the reading. You should still read it multiple times.
+2.1
+  Searching for the very best grass, the cows are travelling about
+    the pasture which is represented as a grid with N rows and M columns
+      (2 <= N <= 100; 2 <= M <= 100). Keen observer Farmer John has
+    recorded Bessie's position as (R1, C1) at a certain time and then
+    as  (R2, C2) exactly T (0 < T <= 15) seconds later. He's not sure
+    if she passed through (R2, C2) before T seconds, but he knows she
+    is there at time T.
+  
+
+    FJ wants a program that uses this information to calculate an integer
+    S that is the number of ways a cow can go from (R1, C1) to (R2, C2)
+    exactly in T seconds. Every second, a cow can travel from any
+    position to a vertically or horizontally neighboring position in
+    the pasture each second (no resting for the cows). Of course, the
+    pasture has trees through which no cow can travel.
+  
+
+    Given a map with '.'s for open pasture space and '*' for trees,
+    calculate the number of possible ways to travel from  (R1, C1) to
+    (R2, C2) in T seconds.
+  
+2.2
+      INPUT FORMAT:
+  
+The name of a file in the following format
+
+    * Line 1: Three space-separated integers: N, M, and T
+  
+
+    * Lines 2..N+1: Line i+1 describes row i of the pasture with exactly M
+    characters that are each '.' or '*'
+
+  
+
+    * Line N+2: Four space-separated integers: R1, C1, R2, and C2.
+  
+
+    SAMPLE INPUT (file ctravel.in):
+  
+4 5 6
+    ...*.
+    ...*.
+    .....
+    .....
+    1 3 1 5
+
+
+    INPUT DETAILS:
+  
+  The pasture is 4 rows by 5 column. The cow travels from row 1, column
+    3 to row 1, column 5, which takes exactly 6 seconds.
+  
+      OUTPUT FORMAT:
+  
+* Line 1: A single line with the integer S described above.
+  
+  SAMPLE OUTPUT 
+1
+          OUTPUT DETAILS:
+  
+        There is only one way from (1,3) to (1,5) in exactly 6 seconds (and
+    it is the obvious one that travels around the two trees).
+  
+top of the page
+
+
+2022-01-31
+ Information gathering form for the semester:  
+https://forms.gle/KnCrEvaAtWiLuiKr7
+go back to the top of the page
+
+
+
+

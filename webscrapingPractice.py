@@ -19,3 +19,6 @@ soup2 = BeautifulSoup(req2.text, "html.parser")
 
 f = open("soup2.txt", "w")
 f.write(soup2.get_text())
+
+d = open("soup.txt", "w")
+d.write(soup.get_text())
