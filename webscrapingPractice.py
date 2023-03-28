@@ -22,3 +22,17 @@ f.write(soup2.get_text())
 
 d = open("soup.txt", "w")
 d.write(soup.get_text())
+
+r = open("soup1.txt", "r")
+# print(r.read())
+#for x in r:
+    #if x.strip():
+        #print(x)
+
+y = list()
+i = 1
+for x in r:
+    if (i % 5 == 0):
+        y.append(x)
+    i += 1
+print(y)

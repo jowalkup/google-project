@@ -25,20 +25,24 @@ AP Computer Science Term 2
 
 Lecture Notes
 
-03-16 Mergesort 
+03-28 Expression generator
+03-27 Lab07-Postfix Calculator
+03-24 Application of stacks 
+03-20 Lab06 Stacks and Queues 
+03-16 Lab05 Mergesort 
 03-15 Merge two sorted lists
 03-14 Runtime Analysis
-03-10 Writing QuickSort
-03-09 Writing QuickSelect
+03-10 Lab04 Writing QuickSort
+03-09 Lab04 Writing QuickSelect
 03-08 Writing Partition
 03-07 Partition
 03-06 Quick Select
 03-02 Maze Solver Update
-02-28 Maze Solver
+02-28 Lab03 Maze Solver
 02-27 File reading updates
 02-16 Animation options
 02-15 NQueens solve
-02-14 Lab02-NQueens
+02-14 Lab02 NQueens
 02-13 N-Queens
 02-09 Recursive Backtracking practice
 02-08 Recursive Backtracking
@@ -52,6 +56,333 @@ Lecture Notes
 
  HIDDEN CONTENT 
 
+
+
+2022-03-28
+Optional Addon:
+In a separate java file Generator.java  (so you don't break your main lab) write a function that returns a String that is a randomized expression.
+public static String expression(double probability){} will have 2 options based on the probability: 
+
+ probability chance to return a String comprised of: a random operator and two more expressions to use it on. e.g. "EXPRESSION1 EXPRESSION2 +" where expression1 and expression2 are the results of the same expression() method. 
+ (1-probability) chance to return a String of a random value. e.g. "5" or "8.2". These can be ints or doubles, but try to keep them easy to look at, and avoid many digit decimals. 
+
+When this generates more expressions , make sure you reduce the probability by some small amount (e.g. 0.1  - 0.2) so that the expression has a lower chance of repeating the more you make additional sub-expressions.
+go back to the top of the page
+
+
+2022-03-27
+Lab07 stack calculator:
+Due: 03/31
+ Repo link: https://classroom.github.com/a/dRbGDVbW 
+ method: double eval(String expression)
+You must evaluate the expression string assuming it is a valid postfix expression with only int, double, and the 5 operators listed below.
+You will have class time on Monday + Tuesday + Half another day. There will not be more full class periods dedicated to this lab afterwards.
+Write the eval(String) method, that will correctly evaluate a post-fix expression. Remember the order is left to right just like scheme : "3 2 -" is 1
+
+eval("11 3 - 4 + 2.5 *") is 30.0
+eval("10 2.0 +") is 12.0
+eval("8 2 + 99 9 - * 2 + 9 -") is 893.0
+eval("1 2 3 4 5 + * - -") is 26.0
+eval("15.6 3.7 5.9 7.1 18.7 - + - +") is 25.0
+eval("25") is 25.0
+eval("32.0 20.0 18 % 8 * /") is 2.0
+eval("") throws an IllegalArgumentException "too few operands"
+eval("1 1 1 +") throws an IllegalArgumentException "too many operands"
+eval("1 1 1 - * +") throws an IllegalArgumentException "too few operands for operation +"
+
+public class Calculator{
+   /**Evaluate a postfix expression stored in expression.
+   *Assume string contains ints, doubles, and operators.
+   *Assume all tokens are separated by a space.
+   *Valid operators are + - / * and % (remainder not modulo)
+   *All results are doubles even if the operands are both int.
+   *@throws IllegalArgumentException when there are too many or too few operands.
+   *        Use the string parameter of your exception to indicate what happened.
+   *        Either "too many operands" or
+   *        "too few operands for operation _" (replace _ with +,- etc.)
+   */
+   public static double eval(String expression){
+     return 0.0;
+   }
+}
+Implementation:
+
+    You should use an ArrayDeque<Double> to store your values and act as the stack. The operators are never stored.
+    The ArrayDeque class is an implementation that you are free to use. Do not use your own Deque.
+  
+suggestions:
+
+ Convert your string into tokens, this can be done with Scanner very easily since you need to look at each value only once. (next() gives the next word)
+ Test your tokens by printing each one!
+ Instead of printing each one, decide what you should do with them and the stack.
+
+Randomly generated expressions:
+-46.02603562375792 = 4.3 5.5 11.5 11.8 - 11.8 * + - 12.3 2.2 * + 2.7 / 15.5 5.2 - 10.8 10.7 + 8.8 14.4 / / 1.9 + 7.6 - 18.6 8.2 14.6 / 16.5 + - 15.8 * / 19.9 * / + 16.2 9.7 12.0 + + 19.8 8.3 + + 2.9 1.8 + 4.6 + 15.9 * 9.1 * / 9.4 4.3 * 9.6 15.2 - + 6.6 14.1 / + 13.8 * * 3.8 17.9 8.8 * 12.6 - 12.5 + - 5.5 / + 16.8 1.4 0.4 + - 10.7 + 5.4 8.2 7.9 - / / 2.8 18.7 / * 3.5 2.8 * / - *
+3181.944006478405 = 0.2 10.3 - 5.3 10.1 - - 7.7 9.3 1.4 + 16.6 - 0.7 + * 8.8 18.9 12.8 + 5.6 - 19.0 * 4.9 7.0 / * / / 11.8 1.3 10.7 0.7 18.4 / - / 18.9 / - / * 9.9 2.4 12.2 + / 17.1 11.9 10.9 * 19.0 * + 7.4 15.5 / + + 1.2 17.2 / 10.9 / 8.5 0.9 - 16.8 / - - + 7.0 5.6 / 16.6 19.0 / 9.3 3.8 6.2 * 18.5 / + * 17.9 0.3 1.8 / + 15.1 - 8.3 / 1.9 * * - 8.2 14.7 2.8 14.5 - / / 2.0 19.7 4.5 / + / + 2.8 17.7 8.0 10.1 18.8 - + / 11.5 / - - +
+-758.3344574395414 = 19.7 4.4 13.7 8.9 * * 6.0 4.1 / * 7.1 - - 8.6 9.9 14.2 + - 8.5 2.8 - - 0.1 / 12.3 / 14.6 15.2 18.3 / 11.3 6.9 + / / / 10.1 18.8 9.0 / 5.6 / / - 9.0 4.4 + 3.3 14.1 4.8 + / 6.8 0.7 1.5 + + 6.4 - / + 3.9 3.7 15.5 * 5.7 12.0 + 8.3 * - 14.6 13.1 / 10.4 / + - * 16.7 5.4 - 12.1 * - / +
+go back to the top of the page
+
+
+2023/03/24
+Quiz:
+ Wed 03/29 on runtime, all sorts (you still need to know the n2 sorts), stacks and queues. Sorting includes dutch flag partitioning even if you didn't write it.
+AP related information
+Please review this material on your own
+ What is/isn't on the AP: https://secure-media.collegeboard.org/digitalServices/pdf/ap/ap-computer-science-a-java-subset.pdf 
+Quick Reference: (page A1 only!) http://apcentral.collegeboard.com/apc/public/repository/ap_comp_sci_a_quick_reference.pdf IGNORE THE GRIDWORLD STUFF!!! ONLY PAGE A1 MATTERS!
+What is postfix?
+
+    The goal is to evaluate an arbitrary postfix expression. Remember:
+  
+
+
+expression style
+format
+example
+where you find it
+
+
+postfix
+A B OPERATOR
+15 2 +
+hp calculators, this is also called reverse polish notation
+
+
+infix
+A OPERATOR B
+15 + 2 
+your math class, this is the common style you deal with.
+
+
+prefix
+OPERATOR A B
++ 15 2
+scheme, and functions in most programming languages
+
+
+Designing a postfix expression evaluator (calculator)
+valid numbers: any int or double.
+valid operators: + Add, - subtract, * multiply, / divide, % remainder (You will just use the corresponding java operations)
+operator limitations: all operators are binary (they work on 2 values) so you cannot have (1 2 3 +) this would require parenthesis.
+For our purposes assume all results are doubles (so you do not have to preserve int when you run an operation on two ints)
+This means you treat all division as floating point, e.g.   "1 2 /"   is 0.5
+The expressions will be strings, and all values and operators are separated by a single space:
+
+"10 2.0 +"
+"11 3 - 4 + 2.5 *" 
+ "8 2 + 99 9 - * 2 + 9 -" 
+ "1 2 3 4 5 + * - -" 
+ "5 9 + 2 * 6 5 * +" 
+
+Discussion!
+
+How can we write an algorithm to evaluate any postfix expression?
+Can you do it in a single pass reading from left to right?
+hint: you just learned stacks...
+
+
+If you didn't answer the questions then GO BACK ! Think of the answers to the discussion questions!
+The next paragraph is to space things out... so people don't jump to the next part.
+
+    Decipherment tingling of the spine adipisci velit star stuff harvesting star light a mote of dust suspended in a sunbeam muse about.
+    Made in the interiors of collapsing stars rings of Uranus globular star cluster a still more glorious dawn awaits Quis autem vel eum
+    iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur Orion's sword. With pretty stories for which
+    there's little good evidence hearts of the stars something incredible is waiting to be known Sed ut perspiciatis unde omnis iste
+    natus error sit voluptatem accusantium doloremque laudantium the ash of stellar alchemy dispassionate extraterrestrial observer and
+    billions upon billions upon billions upon billions upon billions upon billions upon billions.
+  
+Stop reading before class!
+
+    Decipherment tingling of the spine adipisci velit star stuff harvesting star light a mote of dust suspended in a sunbeam muse about.
+    Made in the interiors of collapsing stars rings of Uranus globular star cluster a still more glorious dawn awaits Quis autem vel eum
+    iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur Orion's sword. With pretty stories for which
+    there's little good evidence hearts of the stars something incredible is waiting to be known Sed ut perspiciatis unde omnis iste
+    natus error sit voluptatem accusantium doloremque laudantium the ash of stellar alchemy dispassionate extraterrestrial observer and
+    billions upon billions upon billions upon billions upon billions upon billions upon billions.
+  
+STOP! GO BACK!
+Implementation!
+Let us see how a stack could work for the last example: 5 9 + 2 * 6 5 * +
+
+Questions based on the image
+
+What do you do when you see an operand (number)?
+What do you do when you see an operator?
+How do you know you have too many operands? too few?
+
+go back to the top of the page
+
+
+2021/03/21
+ArrayDeque implementation
+There are two valid configurations of the arrayDeque, the head/tail can be in order, or the data wraps around and the head/tail are out of order.
+You can see the diagrams below that when the data goes past the end of the array, it wraps to the other side and you can use all of the empty space in the array before resizing.
+  
+When the array is completely full you must copy all of the values to a new array, and replace the old array with the new array.
+Make sure you copy in the correct order, this is tricky when the data wraps around.
+  
+Lab MyDeque
+https://classroom.github.com/a/cncARAQH 
+Deadline: 03-24
+You have today and Thursday in class to work on this.
+Your goal is to implement an arrayDeque, as per the last lecture.
+Remember that size() and size refer to how many elements are in the data structure. The capacity is how many elements it can hold before you need to resize. The capacity is the length of the internal array, and is not a separate instance variable.
+You need to resize the array when you try to add a new element to either side and the array is at capacity. The resize method isn't listed, because it is private, and the implementation is up to you. When resizing Please make sure you copy the values in the deque over in the correct order!
+This is a data structure that supports generics just like an ArrayList:
+ArrayList<String>words = new ArrayList<String>();
+When using MyDeque the declaration of should be similar, any object type can be used in the angular brackets.
+
+    public class MyDeque<E>{
+      private E[] data;
+      private int size;
+      private int start, end;
+
+      public MyDeque(){  }
+      public MyDeque(int initialCapacity){  }
+      public int size(){ }
+      public String toString(){ }
+      public void addFirst(E element){ }
+      public void addLast(E element){ }
+      public E removeFirst(){ }
+      public E removeLast(){ }
+      public E getFirst(){ }
+      public E getLast(){ }
+    }
+  
+
+Add: place a new value on the indicated side (first/last)
+Get: return but NOT remove the element. (peek)
+Remove: return AND remove the element. (pop / de-queue)
+All methods should be O(1) except toString().
+toString format has comma space between values, examples:
+      "[a, b, c, d]"    "[]"    "[VALUE, VALUE2, VALUE3]" .
+      
+        The left element (a, or VALUE) is the start, while the
+        right element (d, or VALUE3) is the end.
+      
+
+
+Exceptions:
+Remove/Get  (both first and last) will throw: NoSuchElementException - when this deque is empty. Note: This is part of java.util 
+Add (both first and last) will throw: NullPointerException - if the specified element is null (this deque does not permit null elements)
+Generic Array:
+Not a critical concept, but annoying and we need a fix.
+To create a generic array you need to create an array of Object, and then cast it to E. This causes a warning.
+
+    You can use the SuppressWarnings command to prevent it.
+    This is an appropriate use of the command because we need to instantiate an array of objects and cast it.
+    You would not want to SuppressWarnings in most other cases.
+  
+Suppress the warning on the creation of the array
+
+    Note you cannot directly assign to the instance variable if you do this.
+    (This is better as it prevents the accidental suppresion of additional warnings)
+  
+
+    public MyDeque(){
+      @SuppressWarnings("unchecked")
+      E[] d = (E[])new Object[10];
+      data = d;
+    }
+  
+top of the page
+
+
+2023-03-20
+Goal: How To Make Fat Stacks... and Queues.
+Moment of zen:
+'Was the word "queue" created because it is just the letter "q" followed by a bunch of silent letters waiting in a "line" ?'
+Important Note:
+Queue is pronounced like kyoo or just the letter "Q". Queue is NOT kyoo-ee-ew-ee, or kway-way!
+Other pronunciations will be made fun of.
+
+Stack oprations:
+Stacks offer a LIFO (last in first out) behavior. 
+
+void push(element) - add an element to the stack
+element pop() - return the element and remove it from the stack.
+element peek()  - return but don't remove the element
+
+
+Queue oprations:
+Queues typically offer a FIFO (first in first out) behavior with the exception of some variants like the priority queue, which has other factors to consider other than the order inserted. 
+
+void add(element) / void offer(element) / [not java] void enqueue(element)
+element remove() / element poll() / [not java] element dequeue()
+element element() /element peek()
+
+
+Java has built in tools for these concepts:
+
+Queue Interface
+Stack Class
+Deque Interface
+
+Notice this line in the stack class:
+
+    "A more complete and consistent set of LIFO stack operations is provided by the Deque interface
+    And its implementations, which should be used in preference to this class."
+  
+In other words do not use the stack class.
+Deque oprations:
+A Deque is a double ended queue. It can be LIFO, FIFO or WhateverYouWantO™. This is because it allows you to add to either end, and remove from either end. This means you can use it as a stack, or a queue, or do other interesting things with it.
+
+void addLast(element)
+void addFirst(element)
+element removeLast()
+element removeFirst()
+element getLast()
+element getFirst()
+
+Time to think about this...
+For stack,queue, and deque: How could we represent each of them such that all of the above mentioned operations would be constant time?
+
+Which data structures could you use?
+What are the pros/cons of each?
+
+Stack Trace what is it good for?
+
+    public class StackTraceDemo{  //line 01
+      public static boolean compare(int[]arr,int value, int index){ //line 02
+        return arr[index] < value; //03
+      }
+      public static boolean bigMethod(int[]data,int times){//05
+        if( !compare(data,times,0)){//06
+          return true;//07
+        }else {
+          return compare(data,times,times);//09
+        }
+      }
+      public static void main(String[]args){//12
+        int [] data = new int[10];//13
+        for(int i = 0; i < data.length; i++){//14
+          data[i]=(int)(10*Math.random()+1);//15
+        }
+        bigMethod(data,2);//17
+        bigMethod(data,10);//18
+        bigMethod(data,7);//line 19
+      }
+    }
+  
+Look at how the stack trace below helps you identify which method call caused the error!
+    
+Main is the bottom of the stack, and calls bigMethod.
+Then bigMethod calls compare.
+The compare method has an ArrayIndexOutOfBoundsException.
+
+
+
+    This is NOT enough information to help us debug, since each method is called multiple times, and it is difficult to see which caused the problem.
+    You can see that the compiler helps you out in the following way: FILE_NAME.java:LINE_NUMBER
+
+
+    $ java StackTraceDemo
+    Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 10 out of bounds for length 10
+    at StackTraceDemo.compare(StackTraceDemo.java:3)
+    at StackTraceDemo.bigMethod(StackTraceDemo.java:9)
+    at StackTraceDemo.main(StackTraceDemo.java:18)
+  
+top of the page
 
 
 Mergesort
@@ -79,7 +410,7 @@ public class Merge{
     return new int[1];//so this compiles.
   }
 
-  /*mergesortH is the actual recursive mergesort method.
+  /*mergesortH is the recursive mergesort method.
   *@param data the array to be sorted
   *@return a new array that is the sorted version of data.
   */
