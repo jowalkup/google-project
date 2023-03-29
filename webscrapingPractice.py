@@ -32,7 +32,7 @@ r = open("soup1.txt", "r")
 y = list()
 i = 1
 for x in r:
-    if (i % 5 == 0):
+    if (i % 5 == 4):
         y.append(x)
     i += 1
 print(y)
