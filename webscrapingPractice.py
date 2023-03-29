@@ -49,7 +49,7 @@ for x in s:
 print("languages ")
 print(languages)
 print("\n")
-s.close()
+s.close(
 
 t = open("soup1.txt", "r")
 adds = list()
