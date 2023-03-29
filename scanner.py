@@ -19,8 +19,9 @@ with open('queens.txt') as f:
 
 f.close()
 
-queens = [name, address, zip_code, language]
-print(queens)
+queens = list(zip(name, address, zip_code, language))
+print(queens[0][0])
+'''
 print()
 for i in range(0, len(name)):
     print(name[i])
@@ -28,3 +29,4 @@ for i in range(0, len(name)):
     print(zip_code[i])
     print(language[i])
     print()
+'''
