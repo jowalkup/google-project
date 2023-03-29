@@ -28,11 +28,56 @@ r = open("soup1.txt", "r")
 #for x in r:
     #if x.strip():
         #print(x)
+zips = list()
+j = 1
+for k in r:
+    if (j % 5 == 3):
+        zips.append(k[:len(k) - 1])
+    j += 1
+print("zip codes ")
+print(zips)
+print("\n")
+r.close()
 
-y = list()
+s = open("soup1.txt", "r")
+languages = list()
 i = 1
-for x in r:
-    if (i % 5 == 0):
-        y.append(x)
+for x in s:
+    if (i % 5 == 4):
+        languages.append(x[:len(x) - 1])
     i += 1
-print(y)
+print("languages ")
+print(languages)
+print("\n")
+s.close()
+
+t = open("soup1.txt", "r")
+adds = list()
+l = 1
+for x in t:
+    if (l % 5 == 2):
+        adds.append(x[:len(x) - 1])
+    l += 1
+print("addresses ")
+print(adds)
+print("\n")
+t.close()
+
+u = open("soup1.txt", "r")
+names = list()
+o = 1
+for x in u:
+    if (o % 5 == 1):
+        names.append(x[:len(x) - 1])
+    o += 1
+print("names ")
+print(names)
+print("\n")
+
+# zips = list()
+# j = 1
+# for k in r:
+#     if (j % 5 == 4):
+#         zips.append(k[:len(k) - 1])
+#     j += 1
+# print(zips)
