@@ -3,10 +3,10 @@ address = []
 zip_code = []
 language = []
 
-with open('queens.txt') as f:
+with open('soup1.txt') as f:
     counter = 0;
     for line in f:
-        if(line.strip() != "" and line.strip() != "Queens"):
+        if(line.strip() != ""):
             if(counter%4 == 0):
                 name.append(line.strip())
             elif(counter%4 == 1):
@@ -20,7 +20,9 @@ with open('queens.txt') as f:
 f.close()
 
 queens = list(zip(name, address, zip_code, language))
-print(queens[0][0])
+for i in queens:
+    if "Russian" in i[3]:
+        print(i)
 '''
 print()
 for i in range(0, len(name)):
