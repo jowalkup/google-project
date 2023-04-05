@@ -4,7 +4,7 @@ zip_code = []
 language = []
 
 with open('soup1.txt') as f:
-    counter = 0;
+    counter = 0
     for line in f:
         if(line.strip() != ""):
             if(counter%4 == 0):
