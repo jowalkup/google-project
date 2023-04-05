@@ -34,9 +34,9 @@ for k in r:
     if (j % 5 == 3):
         zips.append(k[:len(k) - 1])
     j += 1
-print("zip codes ")
-print(zips)
-print("\n")
+#print("zip codes ")
+#print(zips)
+#print("\n")
 r.close()
 
 s = open("soup1.txt", "r")
@@ -46,9 +46,9 @@ for x in s:
     if (i % 5 == 4):
         languages.append(x[:len(x) - 1])
     i += 1
-print("languages ")
-print(languages)
-print("\n")
+#print("languages ")
+#print(languages)
+#print("\n")
 s.close()
 
 t = open("soup1.txt", "r")
@@ -58,9 +58,9 @@ for x in t:
     if (l % 5 == 2):
         adds.append(x[:len(x) - 1])
     l += 1
-print("addresses ")
-print(adds)
-print("\n")
+#print("addresses ")
+#print(adds)
+#print("\n")
 t.close()
 
 u = open("soup1.txt", "r")
@@ -70,9 +70,9 @@ for x in u:
     if (o % 5 == 1):
         names.append(x[:len(x) - 1])
     o += 1
-print("names ")
-print(names)
-print("\n")
+#print("names ")
+#print(names)
+#print("\n")
 
 # zips = list()
 # j = 1
@@ -81,3 +81,11 @@ print("\n")
 #         zips.append(k[:len(k) - 1])
 #     j += 1
 # print(zips)
+
+
+URL3 = '''https://www.google.com/search?q=nyc+election+candidates&ei=irgsZIijCcip5NoP7oepmAg&ved=0ahUKEwiIkOiWtpH-AhXIFFkFHe5DCoMQ4dUDCBA&uact=5&oq=nyc+election+candidates&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAzIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjoICAAQigUQkQI6CwguEIAEELEDEIMBOgsIABCABBCxAxCDAToRCC4QgAQQsQMQgwEQxwEQ0QM6DgguEIoFELEDEIMBENQCOg4ILhCABBCxAxCDARDUAjoNCAAQigUQsQMQgwEQQzoHCAAQigUQQzoNCC4QigUQsQMQgwEQQzoNCAAQigUQsQMQQxCRAjoFCAAQgAQ6CwguEIAEEMcBENEDOgsIABCKBRCxAxCDAToICAAQFhAeEAo6CAgAEIoFEIYDOgUIIRCgAUoECEEYAFAAWM8kYOslaAJwAXgBgAHTAYgBgxeSAQY0LjIwLjGYAQCgAQG4AQLAAQE&sclient=gws-wiz-serp'''
+req3 = requests.get(URL3)
+soup3 = BeautifulSoup(req3.text, "html.parser")
+v = open("soup3.txt", "w")
+v.write(soup3.get_text())
+v = open("soup3.txt", "r")

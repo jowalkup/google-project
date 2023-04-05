@@ -25,6 +25,7 @@ AP Computer Science Term 2
 
 Lecture Notes
 
+03-30 Lab08-BurnTrees
 03-28 Expression generator
 03-27 Lab07-Postfix Calculator
 03-24 Application of stacks 
@@ -58,7 +59,174 @@ Lecture Notes
 
 
 
-2022-03-28
+2023/04/03
+Exam
+You will have an exam the Thursday after break. It is cumilative and includes all material up to frontiers.
+Tree Burning FASTER!
+Better than nothing implementation
+Several strategies are possible to make this simulation. Both of the following solutions requrie that you loop over the entire 2D array at least once each round of the simulation. 
+An extra loop
+Using an extra state such as NEW_FIRE would allow you to loop over the array once to make FIRE spread NEW_FIRE to adjacent squares then burn out
+    (Thus preventing the issue of spreading FIRE, which could then be looped over and spread again this round).
+    Unfortunately a second pass would be required to turn all NEW_FIRE into FIRE so that the next pass would work properly.
+    Another way To do this, is loop through and turn all FIRE into ASH, then have only ASH spread FIRE to adjacent trees.
+An extra board
+
+    Having two copies of the map, and then alternating between them is another way to approach this.
+    You loop over the current map looking for FIRE, when you find it, you upodate the other map:
+    spreading FIRE and turn the current position into ASH. You can then swap current map with new map, and repeat the process.
+    This does not require a second loop over the map, but it does require updating two maps.
+  
+Both of these approaches are slow
+
+    Since we are going to talk about runtime, let us agree this is an N by N board,
+    and the simulation lasts for K rounds.
+    This means the runtime for both of these two methods will be O(kn2).
+  
+
+    Consider this: we saw that the number of rounds could equal or even exceed the width of the board,
+    we can effectively have a runtime of worse than O(n3) for some densities.
+    If we try a 1000 by 1000 board and need to repeat the simulation around 100 times per density, AND you want to test multiple densities (at least 100):
+  
+
+n3 * repetitions * densities = 1000 3 * 100 * 100
+  
+Better than looping over the whole array
+
+    Instead of looping over the whole 2D array to find each fire, we can keep track of all fire in a collection.
+    We will call this a Frontier , because it is a collection of all of the  places we have yet to explore .
+    We can process each existing position of the frontier which does a few things:
+    Check the size of the Frontier and  process that many elements .
+ Loop size times:
+
+remove the oldest location from the frontier, this is your current position
+Turn that position into ASH
+spread FIRE to neighboring TREE squares
+Any new FIRE you created when spreading must be added to the Frontier for next time
+
+Note: You should only process the original FIRE, so check the size of the Frontier once, before you start removing elements.
+
+Runtime?
+
+    Let us assume that adding and removing fire from the frontier is a constant time operation,
+    that would mean each simulation would run in O(k*f) time, where f is the average size of the frontier.
+  
+Runtime
+
+    If number of trees burned is b that would make the runtime O(b).
+    The number of rounds will not make it slower! This should make sense intuitively, as you process each tree at most once.
+  
+
+    Also note that b is bounded between 0 and n2. Sure this means you went from worst case O(n3) to worst case O(n2), but that is only when the density is very high.
+    Lower densities lowers the total possible amount of work.
+  
+
+    Now the total rumtime is O(n2) * repetitions * densities. Though many of the simulations with lower densities will terminate very fast, those will average with the high density ones where almost all the trees burn.
+  
+New Frontiers
+
+    We need a Frontier class that can store row,column pairs. Since we ONLY care about position and nothing else, we can just use 1D arrays as each of the positions {0,5}, {2,7} etc.. We would need a few methods:
+  
+
+void add(int[]): add a new position to the Frontier.
+int[] remove() : remove the position and return it.
+size()         : get the current size of the Frontier.
+A default constructor.
+
+public class Frontier{
+  private ??? frontier;
+  public Frontier(){}
+  public int size(){}
+  public void add(int[]location){}
+  public int[] remove(){}
+}
+What data structure would allow you to: add/remove in constant time, AND process the older positions before the new positions?
+I hope you can think of one.
+...STOP! THINK!
+ In java there are two built in data structures that have at least one implementation each that you could easily use here. Please don't say ArrayList...
+
+    Since this needs FIFO behavior, any Queue implementation would be great.
+    Either LinkedList or ArrayDeque would work.
+  
+Why bother with this frontier class? Why not use the LinkedList directly you may be wondering...
+
+By making this Frontier a wrapper class around some other collection you can easily switch the implementation under the hood of the Frontier class, and not have to modify your simulation at all!
+You can add extra features that are not part of the collections. (e.g. Allowing different implementations depending on your constructor, or storing more info about the simulation)
+
+NOTE! Benefit 1 above can be gained by creating a variable of type Queue<E> (the interface) instead of a custom class. Making an interface as the type of your frontier means that you can instantiate either a LinkedList or ArrayDeque (or other implememnting classes) without changing your code.
+You can think of your tree burning simulation as a maze solver!
+Your old maze solver acted like this (DFS):
+ 
+Your tree burning simulation is more like this (BFS):
+ 
+Required Component of Lab:
+Now go make your simulation faster...
+
+    Your goal now is to make your simulation faster. Do this by adding a Frontier and only checking the positions that are already on fire.
+    Your Frontier should be Frontier.java , and it should instantiate an ArrayDeque or LinkedList on the inside. In addition to your constructors you should have methods: add(), remove(), and size().
+  
+Your frontier does not need generics, assume you are storing int[] and instantiate a LinkedList&ltint[]> on the inside.
+top of the page
+
+
+2023-03-30
+Burning trees for mathematical purposes
+
+    Consider a forest that is made up of a NxN grid, and that some percentage of the spaces of the grid are filled randomly with trees. (see the leftmost grid of the image below)
+    We will then light the trees on fire, and see how long the fire will burn.
+    The starting position of the trees is randomized, so each run will have a differnet number of rounds before the fire burns out completely.
+    We are interested in calculating the number of rounds of burn time for a particular forest.
+  
+Ryan started the fire!
+
+    To start the simulation, let us set fire to the leftmost column of trees in the forest
+    (see the 2nd grid in the image below)
+  
+Our simulated fire will behaves very predictably:
+
+There are 4 states for a square: empty, tree, fire, ash.
+At the start of a round all existing fire will spread and then turn to ash
+A fire will spread to all trees directly adjacent to the fire (not diagonal)
+A tree that just turned into fire will not spread until the next round.
+Empty spaces and ash cannot catch fire.
+
+The effect is that fire will expand by  one square each round. Eventually the fire will stop burning because there are no more trees adjacent to the existing fire.
+example of the simulation:
+
+
+Simulation adjustments
+We can adjust the density of trees and this would affect the burn time. Consider 100% density, the fire would burn for a number of rounds equal to the width of the grid. Consider an forest of 10% density (still randomly arranged), the fire would stop almost immediately due to lack of adjacent trees to burn.
+Tree Burning Simulator!
+Lab08-BurnTrees
+https://classroom.github.com/a/pO6NlPRW
+Goal: To complete a tree burning simulation!
+This is a multi stage lab. You will complete the work in a naive way, and then refine your solution using the notes and lecture from next week!
+Methods you MUST complete BY MONDAY:
+
+tick() - advance the map to the next state.
+done() - determine if there are more fires left.
+
+
+    Notice that you are able to modify map directly.
+    It is just a 2D array of values. Please use the words
+    TREE/FIRE/ASH/SPACE in your method to make the code more readable.
+    The only values map should contain at the end of a tick are TREE/FIRE/ASH/SPACE.
+  
+You are allowed to make a copy of the array so that you have an easier time manipulating/calculating states. This may be slow, but we can improve it after it works.
+
+    private int[][]map;
+    private int ticks;
+    private static final int TREE = 2;
+    private static final int FIRE = 1;
+    private static final int ASH = 3;
+    private static final int SPACE = 0;
+  
+You will most likely need to add some extra instance variables in order to make this simulation work in a reasonable amount of time. You shouldn't need to add too many variables, but you are allowed to do so... try to keep it simple. When you do this, feel free to update the constructor and other methods accordingly.
+Once this works, you can use your working simulation to determine the behavior of the fire on different densities.
+top of the page
+
+
+2023-03-28
 Optional Addon:
 In a separate java file Generator.java  (so you don't break your main lab) write a function that returns a String that is a randomized expression.
 public static String expression(double probability){} will have 2 options based on the probability: 
@@ -70,7 +238,7 @@ When this generates more expressions , make sure you reduce the probability by s
 go back to the top of the page
 
 
-2022-03-27
+2023-03-27
 Lab07 stack calculator:
 Due: 03/31
  Repo link: https://classroom.github.com/a/dRbGDVbW 
@@ -1132,7 +1300,7 @@ NSolutions
 go back to the top of the page
 
 
-2022-02-15
+2023-02-15
 Nqueens Lab solve()
 Do Now:
 Type your password to log in (5 seconds), close your laptops.
@@ -1189,8 +1357,8 @@ For more information about him and our event, check out our insta(@stuyquantum) 
 Fill out this form if you're interested: https://forms.gle/NxpYm24kzntsRtqu5 
 Thank you!
 Lab02
-Assigned: 2022/02/14
-Due: 2022/02/17
+Assigned: 2023/02/14
+Due: 2023/02/17
 
     N-Queens Lab
   
@@ -1783,7 +1951,7 @@ The name of a file in the following format
 top of the page
 
 
-2022-01-31
+2023-01-31
  Information gathering form for the semester:  
 https://forms.gle/KnCrEvaAtWiLuiKr7
 go back to the top of the page
