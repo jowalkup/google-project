@@ -1,3 +1,6 @@
+#! usr/bin/python3
+print("content/type:html")
+
 func = open("firstPage.html", 'w')
 
 
