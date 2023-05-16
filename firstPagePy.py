@@ -1,6 +1,6 @@
 #! usr/bin/python3
 print("content/type:html")
-
+from locationClass import Location
 func = open("firstPage.html", 'w')
 
 
@@ -8,6 +8,7 @@ name = []
 address = []
 zip_code = []
 language = []
+locations = []
 
 with open('soup1.txt') as f:
     counter = 0;
@@ -23,6 +24,12 @@ with open('soup1.txt') as f:
                 language.append(line.strip())
             counter += 1
 
+i = 0;
+while i < len(name):
+    locations.append(Location(name[i], address[i], zip_code[i], language[i]))
+    i+=1
+
+
 f.close()
 
 def wrap(arr):
@@ -30,17 +37,19 @@ def wrap(arr):
     start = "<br><tr>"
     end = "</tr>"
     for x in arr:
-        final += start + x + end
+        final += start + x.get_name() + end
     return final
 
-names = wrap(name)
+names = wrap(locations)
 
 func.write('''<html>
     <head>
+    <link rel="stylesheet" href="firstPageCSS.css">
     <title>Names</title>
     <h1>Names</h1>
     </head>
-    <table> <tr>''' + names + '''</tr></table>
+    <body>
+    <table> <tr>''' + names + '''</tr></table></body>
     </html>''')
 
 func.close()

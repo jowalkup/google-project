@@ -1,3 +1,4 @@
+from class.py import Location
 name = []
 address = []
 zip_code = []
