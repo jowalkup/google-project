@@ -1,4 +1,5 @@
-import news from 'gnews';
+//import news from 'gnews';
+const news = require('gnews');
 
 const candidateNews = async(name) => {
     const c_news = await news.search(name);
