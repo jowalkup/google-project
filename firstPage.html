@@ -1,8 +1,29 @@
 <html>
-    <head>
-    <link rel="stylesheet" href="firstPageCSS.css">
-    <title>Names</title>
-    <h1>Names</h1>
-    </head>
-    <table> <tr><br><tr>Bronx County Supreme Court House</tr><br><tr>Dress Barn Storefront</tr><br><tr>Justice Sonia Sotomayor Community Center</tr><br><tr>Brooklyn College- West Quad</tr><br><tr>Carey Gardens Community Ctr.</tr><br><tr>Council Center for Senior Citizens</tr><br><tr>Ed R Murrow HS</tr><br><tr>Erasmus Hall HS</tr><br><tr>FDR. High School</tr><br><tr>Fort Hamilton HS</tr><br><tr>Knights Of Baron De Kalb Inc</tr><br><tr>McCarren Play Center</tr><br><tr>PS 68 JHS</tr><br><tr>Sirico's Catering</tr><br><tr>St. Dominic R.C. Church</tr><br><tr>St. Paul's Church</tr><br><tr>Taylor Wythe Comm Ctr</tr><br><tr>Yeshiva Lev Bais Yaakov</tr><br><tr>Youth Center</tr><br><tr>Antun's</tr><br><tr>Board of Elections - Queens Voting Machine Facility Annex</tr><br><tr>Helen Marshall Cultural Center at Queens Borough Hall</tr><br><tr>Rego Center Community Room</tr><br><tr>Ocean Breeze Athletic Complex</tr><br><tr>Our Lady of Pity</tr><br><tr>Dress Barn Storefront</tr><br><tr>PS 119</tr><br><tr>PS 47 John Randolph</tr><br><tr>PS 90 The Family School</tr><br><tr>William H. Taft High School</tr><br><tr>Bay Academy-IS 98</tr><br><tr>Bhavaanee Maa Mandir,Inc.</tr><br><tr>Boro Park YM-YWHA</tr><br><tr>Brightwater's Comm Room</tr><br><tr>Brooklyn College Roosevelt Hall</tr><br><tr>Canarsie HS</tr><br><tr>Ed R Murrow HS</tr><br><tr>Independence Towers Senior Center</tr><br><tr>IS 71 -Juan Morel Campos</tr><br><tr>James Madison HS</tr><br><tr>Marlboro Memorial Post</tr><br><tr>McGuiness Sr Ctr</tr><br><tr>PS 188</tr><br><tr>PS 128</tr><br><tr>PS 156 IS</tr><br><tr>PS 157</tr><br><tr>PS 170</tr><br><tr>PS 177</tr><br><tr>PS 185</tr><br><tr>PS 195</tr><br><tr>PS 197</tr><br><tr>PS 201 JHS</tr><br><tr>PS 203</tr><br><tr>PS 206</tr><br><tr>PS 209</tr><br><tr>PS 216</tr><br><tr>PS 217</tr><br><tr>PS 227 JHS</tr><br><tr>PS 230</tr><br><tr>PS 234 IS</tr><br><tr>PS 238</tr><br><tr>PS 254</tr><br><tr>PS 264</tr><br><tr>PS 269</tr><br><tr>PS 276</tr><br><tr>PS 286</tr><br><tr>PS 329</tr><br><tr>PS 346</tr><br><tr>PS 52</tr><br><tr>PS 59</tr><br><tr>PS 6</tr><br><tr>PS 68 JHS</tr><br><tr>PS 682</tr><br><tr>PS 90</tr><br><tr>PS 99</tr><br><tr>PS/IS 180</tr><br><tr>Shorefront YM-YWHA</tr><br><tr>St. Brendan Senior Apartments L.P.</tr><br><tr>St. Edmund Preparatory HS</tr><br><tr>St. Marks School</tr><br><tr>St. Simon And Jude Church</tr><br><tr>Taylor Wythe Comm Ctr</tr><br><tr>Telecommunications HS</tr><br><tr>Trump Village Bldg 3A</tr><br><tr>Water View Tower</tr><br><tr>William E. Grady CTE High School</tr><br><tr>Dayton Beach Park 8600</tr><br><tr>Holy Cross RC Church</tr><br><tr>IS 93-Ridgewood</tr><br><tr>PS 122-Mamie Fay</tr><br><tr>PS 153 - Maspeth Elementary School</tr><br><tr>PS 175-Lynn Gross Discovery School</tr><br><tr>PS 206-Horace Harding School</tr><br><tr>PS 220-Edward Mandel</tr><br><tr>PS 34-John Harvard</tr><br><tr>IS 2 George L. Egbert</tr><br><tr>PS 13 M.L. Lindemeyer</tr><br><tr>PS 56 The Louis Desario School</tr><br><tr>PS 58 Space Shuttle Columbia School</tr><br><tr>PS/IS 48 William G. Wilcox School</tr></tr></table>
-    </html>
+<head>
+<link rel="stylesheet" href="firstPageCSS.css">
+<title>Voter Information Page</title>
+</head>
+<h1>
+  Voting Location List
+</h1>
+<form>
+<label for="languageSelect">
+Preferred Language:</label>
+<select name="preferredLanguage" id="languageSelect">
+  <option value="">--Please choose an option--</option>
+    <option value="Russian">Russian</option>
+    <option value="Polish">Polish</option>
+    <option value="Arabic">Arabic</option>
+    <option value="French">French</option>
+    <option value="Bengali">Bengali</option>
+    <option value="Chinese">Chinese</option>
+    <option value="Urdu">Urdu</option>
+    <option value="Yiddish">Yiddish</option>
+    <option value="Italian">Italian</option>
+    <option value="Haitian">Haitian</option>
+    <option value="Korean">Korean</option>
+
+</select>
+<button type="submit" formaction="http://localhost:8090/demo/firstPagePy.py?preferredLanguage=Polish"> Submit preference </button>
+</form>
+</html>

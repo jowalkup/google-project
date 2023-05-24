@@ -19,3 +19,4 @@ class Location:
 
     def get_language(self):
         return self.language
+        
