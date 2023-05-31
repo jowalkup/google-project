@@ -1,5 +1,5 @@
 //import news from 'gnews';
-const news = require('gnews');
+/*const news = require('gnews');
 
 const candidateNews = async(name) => {
     const c_news = await news.search(name);
@@ -9,4 +9,10 @@ const candidateNews = async(name) => {
     }
 };
 
+candidateNews('Kathy C. Hochul');*/
+const candidateNews = (name) => {
+    let article = "hi";
+    $(".news").append(article + name);
+
+};
 candidateNews('Kathy C. Hochul');

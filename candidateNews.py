@@ -1,4 +1,4 @@
-from pygooglenews import GoogleNews
+'''from pygooglenews import GoogleNews
 
 def get_news(search):
     gn = GoogleNews(country = 'US')
@@ -21,3 +21,11 @@ def get_news(search):
     return
 
 get_news('Kathy C. Hochul')
+'''
+#print("hello")
+
+from GoogleNews import GoogleNews
+googlenews = GoogleNews(lang='en', region='US')
+
+googlenews.get_news('APPLE')
+#print(googlenews.results())

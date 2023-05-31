@@ -22,7 +22,7 @@ f.close()
 queens = list(zip(name, address, zip_code, language))
 for i in queens:
     if "Russian" in i[3]:
-        print(i)
+        pyscript.write(i)
 '''
 print()
 for i in range(0, len(name)):
