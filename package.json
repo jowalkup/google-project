@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "gnews": "^1.0.3",
+    "google-news-json": "^2.1.0"
+  }
+}

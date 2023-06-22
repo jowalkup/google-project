@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <!--<script src="https://cdn.jsdelivr.net/pyodide/v0.23.2/full/pyodide.js"></script>-->
+
+      <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+      <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+  </head>
+  <body>
+    Pyodide test page <br>
+    Open your browser console to see Pyodide output
+    <py-config>
+      packages = ["GoogleNews"]
+    </py-config>
+    <!--<py-env>
+    - sentence-transformers
+  </py-env>-->
+    <py-script>
+      '''async def _fetch():
+        from pygooglenews import GoogleNews
+        resp = await pyfetch("...")
+      ...
+      pyscript.run_until_complete(_fetch())'''
+      from GoogleNews import GoogleNews
+
+      gn = GoogleNews(lang='en', region='US')
+      gn.search('https://www.google.com/search?q=apple&rlz=1C5CHFA_enUS931US932&oq=apple&aqs=chrome.0.0i271j46i67i199i433i465i650j0i67i131i433i650j0i20i131i263i433i512j0i131i433i512j46i67i433i613i650j0i67i650j0i433i512j0i67i650j0i131i433i512.874j0j7&sourceid=chrome&ie=UTF-8')
+      print("hello")
+      print(gn.get_links())
+
+      #newsitem = search.results()
+
+      '''title = []
+      link = []
+
+      for item in newsitem:
+          title.append(item.title)
+          link.append(item.link)
+
+      news = list(zip(title, link))'''
+
+      '''for item in search:
+            print(item)
+            print()'''
+
+
+      '''from pygooglenews import GoogleNews
+      googlenews = GoogleNews(lang='en', region='US')-->'''
+    </py-script>
+  </body>
+</html>

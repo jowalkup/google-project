@@ -1,16 +1,22 @@
-#! usr/bin/python3
+#! /usr/bin/python3
 print("content/type:html")
-
-func = open("firstPage.html", 'w')
-
+print()
+import cgi
+allData = cgi.FieldStorage(  keep_blank_values=True)
+preferredLanguage = allData['preferredLanguage'].value
+#preferredLanguage = "Polish"
+from location import Location
+func = open("result.html", 'w')
+func.write('''<html><head><link rel="stylesheet" href="firstPageCSS.css"><title>Voter Information Page: Language Search Results</title>''')
 
 name = []
 address = []
 zip_code = []
 language = []
+locations = []
 
 with open('soup1.txt') as f:
-    counter = 0;
+    counter = 0
     for line in f:
         if(line.strip() != ""):
             if(counter%4 == 0):
@@ -23,24 +29,37 @@ with open('soup1.txt') as f:
                 language.append(line.strip())
             counter += 1
 
-f.close()
+i = 0
+while i < len(name):
+    if(language[i] == preferredLanguage):
+        locations.append(Location(name[i], address[i], zip_code[i], language[i]))
+    i+=1
+
+
+# f.close()
 
 def wrap(arr):
     final = ""
     start = "<br><tr>"
     end = "</tr>"
     for x in arr:
-        final += start + x + end
+        final += start + x.get_name() + end
     return final
 
-names = wrap(name)
+names = wrap(locations)
 
-func.write('''<html>
-    <head>
-    <title>Names</title>
-    <h1>Names</h1>
-    </head>
-    <table> <tr>''' + names + '''</tr></table>
-    </html>''')
+func.write('''
+     <body>
+     <table> <tr>''' + names + '''</tr></table></body></html>
+    ''')
 
-func.close()
+#func.close()
+print(func.read())
+
+# print('''<html>
+# <head>
+# <link rel="stylesheet" href="firstPageCSS.css">
+# <title>Voter Information Page: Language Search Results</title>
+#     <body>
+#     <table> <tr>''' + names + '''</tr></table></body></html>
+#     ''')
